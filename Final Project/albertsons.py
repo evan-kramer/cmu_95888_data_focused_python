@@ -46,6 +46,5 @@ for p in products:
     element.send_keys(Keys.BACKSPACE)
 
 driver.close()
-df = pd.DataFrame([prices.keys(), prices.values()], columns = ['product', 'price'], 
-                  index = range(len(prices)))
+df = pd.DataFrame([prices.keys(), prices.values()]).transpose()
 df.to_csv('albertsons.csv')
