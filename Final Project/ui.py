@@ -43,8 +43,12 @@ while zip_test == False:
     else:
         print("Looks like you've got some non-numeric characters in there.")
 
-# Search for a product
+# Define store to esarch
 print('Forage can help you find the best prices on groceries near there.')
+
+
+# Search for a product
+
 search = input('What are you looking for? ')
 search_test = False
 while search_test == False:
@@ -58,10 +62,9 @@ while search_test == False:
 # Log user data
 
 # Albertsons
-# Ahold Delhaize
 # Kroger
 # Target
-# Walmart
+
 
     
     
