@@ -45,7 +45,7 @@ while zip_test == False:
 
 # Define store to esarch
 print('Forage can help you find the best prices on groceries near there.')
-
+# Scrape directly from sites
 
 # Search for a product
 

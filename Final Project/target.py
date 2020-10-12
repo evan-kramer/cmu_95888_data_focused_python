@@ -12,7 +12,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import re
 import time
-driver = webdriver.Chrome('C:/Users/evan.kramer/Documents/CMU/Code/chromedriver.exe')
+driver = webdriver.Chrome('chromedriver.exe')
 products = pd.read_csv('grocerybear.csv')['title'].unique()
 prices = {}
 
