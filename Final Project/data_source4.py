@@ -3,6 +3,7 @@
 Created on Wed Sep 23 21:46:30 2020
 
 @author: evan.kramer
+evankram
 """
 # Scrape data from Grocery Bear
 # Set up
@@ -14,28 +15,48 @@ from urllib.request import urlopen
 import time
 driver = webdriver.Chrome('C:/Users/evan.kramer/Documents/CMU/Code/chromedriver.exe')
 products = pd.read_csv('data_source3.csv')['title'].unique()
-driver.get('https://www.gianteagle.com/')
+driver.get('https://albertsons.com/')
 time.sleep(3)
 
+# Try adjusting zip code
+driver.find_element_by_id('openFufillmentModalButton').click()
+
 # Loop through products
-# for p p in products: 
+for p in products[:5]: 
+    # Enter zip code
+    
+    # Submit search
+    element = driver.find_element_by_id('skip-main-content')
+    element.click()
+    element.send_keys(p)
+    element.send_keys(Keys.ENTER)
+    
+    # Find prices
+    try: 
+        time.sleep(3)
+        print(driver.find_element_by_class_name('product-title').text)
+        print(driver.find_element_by_class_name('product-price-con').text)
+    except:
+        print('There was an error.')
+    
+    # Clear search
+    element = driver.find_element_by_id('skip-main-content')
+    element.click()
+    element.send_keys(Keys.CONTROL, 'a')
+    element.send_keys(Keys.BACKSPACE)
+    
+# Zip code
 
-# Submit search
-element = driver.find_element_by_id('search')
-element.send_keys(products[0])
-element.send_keys(Keys.ENTER)
 
-time.sleep(6)
 
+'''
 bs = BeautifulSoup(urlopen(driver.current_url).read(), 'lxml')
 file_out = open('temp.txt', 'wt', encoding = 'utf-8')
 file_out.write(str(bs))
-fout.close()
+file_out.close()
+'''
 
-
-
-
-
+'''
 ids = driver.find_elements_by_xpath('//*[@id]')
 # ids = driver.find_elements_by_partial_link_text('product')
 for i in ids:
@@ -44,7 +65,7 @@ for i in ids:
         driver.find_element_by_id(i.get_attribute('id')).click()
     except:
         pass
-    
+'''    
 # class='ProductTileFull_price w-100 mt1 header-4 fw-sb gray-20 dfx mb1 justify-center'
 # class='ProductTileFull_unitinfo w-100 gray-40 small dfx justify-center '
 

@@ -6,8 +6,6 @@ Created on Wed Sep 23 21:46:30 2020
 """
 # Scrape data from Grocery Bear
 # Set up
-from urllib.request import urlopen
-from bs4 import BeautifulSoup
 import requests
 import pandas as pd
 cities = ['all',
@@ -29,7 +27,12 @@ headers = {
     'api-key': 'DD3BE1039406F4DE66D315170A27ED8A03083F3E5A0F8CF697A8993448BE3C54',
     'Content-Type': 'application/json',
 }
-data = '{"city":"all", "product":"oj", "num_days":1}' # can get all data with "num_days":0
+data = '{"city":"all", "product":"bread", "num_days":0}' # can get all data with "num_days":0
+response = requests.post('https://grocerybear.com/getitems', headers = headers, data = data)
+
+
+
+
 
 # Loop through all products
 df = pd.DataFrame() # initial'ize empty dataframe
