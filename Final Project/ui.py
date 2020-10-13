@@ -2,8 +2,11 @@
 """
 Created on Sat Sep 26 20:55:06 2020
 @author: evan.kramer
+Evan Kramer
 evankram
+Shoukang Mao
 shoukanm
+Omar Othman
 oothman
 """
 # Set up
