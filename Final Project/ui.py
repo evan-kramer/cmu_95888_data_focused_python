@@ -66,7 +66,7 @@ print('Forage can help you find the best prices on groceries near there.')
 # TODO: Handle options other than yes/no
 # TODO: Accept a list or tuple as input
 # TODO: Get all price data to print
-# TODO: Log user data
+# TODO: Add feature to add item to database
 search_test = False
 num_searches = 0
 searches = {}
