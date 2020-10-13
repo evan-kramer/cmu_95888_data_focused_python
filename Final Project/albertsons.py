@@ -13,7 +13,7 @@ from selenium.webdriver.common.keys import Keys
 import re
 import time
 driver = webdriver.Chrome('chromedriver.exe')
-products = pd.read_csv('data_source3.csv')['title'].unique()
+products = pd.read_csv('grocerybear.csv')['title'].unique()
 prices = {}
 
 # Enter zip code
@@ -45,6 +45,10 @@ for p in products:
     element.send_keys(Keys.CONTROL, 'a')
     element.send_keys(Keys.BACKSPACE)
 
+# Output file
 driver.close()
-df = pd.DataFrame([prices.keys(), prices.values()]).transpose()
+df = (pd.DataFrame([prices.keys(), prices.values()])
+      .transpose()
+      .rename({0:'product', 1:'price'}, axis = 1))
+df['grocer'] = 'Albertsons'
 df.to_csv('albertsons.csv')
