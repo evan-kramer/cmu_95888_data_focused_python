@@ -13,7 +13,8 @@ from selenium.webdriver.common.keys import Keys
 import re
 import time
 driver = webdriver.Chrome('chromedriver.exe')
-products = pd.read_csv('grocerybear.csv')['title'].unique()
+# products = pd.read_csv('grocerybear.csv')['title'].unique()
+products = pd.read_csv('upc.csv', encoding = 'cp1252')['title'].unique()
 prices = {}
 
 # Enter zip code
@@ -23,7 +24,7 @@ prices = {}
 # Albertsons
 driver.get('https://albertsons.com/')
 time.sleep(3)
-for p in products: 
+for p in products[:1000]: 
     # Search
     element = driver.find_element_by_id('skip-main-content')
     element.click()
@@ -40,10 +41,18 @@ for p in products:
         print("We couldn't find", p)
     
     # Clear search
-    element = driver.find_element_by_id('skip-main-content')
-    element.click()
-    element.send_keys(Keys.CONTROL, 'a')
-    element.send_keys(Keys.BACKSPACE)
+    try:
+        element = driver.find_element_by_id('skip-main-content')
+        element.click()
+        element.send_keys(Keys.CONTROL, 'a')
+        element.send_keys(Keys.BACKSPACE)
+    except:
+        driver.refresh()
+        time.sleep(3)
+        element = driver.find_element_by_id('skip-main-content')
+        element.click()
+        element.send_keys(Keys.CONTROL, 'a')
+        element.send_keys(Keys.BACKSPACE)
 
 # Output file
 driver.close()

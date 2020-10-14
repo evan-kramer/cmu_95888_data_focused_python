@@ -10,10 +10,10 @@ evankram
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-import re
 import time
 driver = webdriver.Chrome('chromedriver.exe')
-products = pd.read_csv('grocerybear.csv')['title'].unique()
+# products = pd.read_csv('grocerybear.csv')['title'].unique()
+products = pd.read_csv('upc.csv', encoding = 'cp1252')['title'].unique()
 prices = {}
 
 # Establish connection
@@ -24,7 +24,7 @@ time.sleep(3)
 # driver.find_element_by_class_name('CurrentModality ').click()
 
 # Loop through products
-for p in products: 
+for p in products[:1000]: 
     # Search
     element = driver.find_element_by_id('search')
     element.click()
@@ -37,17 +37,22 @@ for p in products:
         product = driver.find_elements_by_xpath('.//a[@data-test="product-title"]')[0].text
         price = driver.find_elements_by_xpath('.//span[@class="h-text-bs"]')[0].text
         prices[product] = price.replace('$', '')
-        # print("Product:", product)
-        # print("Product2:", product2)
-        # print("Price:", price)
     except:
         print("We couldn't find", p)
     
     # Clear search
-    element = driver.find_element_by_id('search')
-    element.click()
-    element.send_keys(Keys.CONTROL, 'a')
-    element.send_keys(Keys.BACKSPACE)
+    try:
+        element = driver.find_element_by_id('search')
+        element.click()
+        element.send_keys(Keys.CONTROL, 'a')
+        element.send_keys(Keys.BACKSPACE)
+    except:
+        driver.refresh()
+        time.sleep(3)
+        element = driver.find_element_by_id('search')
+        element.click()
+        element.send_keys(Keys.CONTROL, 'a')
+        element.send_keys(Keys.BACKSPACE)
 
 # Output file
 driver.close()

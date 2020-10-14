@@ -17,12 +17,13 @@ import re
 import difflib
 import os
 import datetime
-# import target
 # import albertsons
+# import target
 
 # TODO: Visualizations (perhaps grocery store locations near zip code entered?)
 # TODO: Use NumPy
-
+# TODO: Add summary statistics
+# TODO: Display only top five matches then ask if they want to see more
 
 # Load data
 # TODO: Should this include user-added items?
