@@ -10,6 +10,7 @@ Omar Othman
 oothman
 """
 # Set up
+import numpy as np
 import pandas as pd
 import requests
 import re
@@ -18,6 +19,10 @@ import os
 import datetime
 # import target
 # import albertsons
+
+# TODO: Visualizations (perhaps grocery store locations near zip code entered?)
+# TODO: Use NumPy
+
 
 # Load data
 # TODO: Should this include user-added items?
