@@ -11,7 +11,6 @@ oothman
 """
 # Set up
 import pandas as pd
-import numpy as np
 import requests
 import re
 import difflib
@@ -81,16 +80,13 @@ while zip_test == False:
         except:
             print("Sorry, we couldn't find that zip code.")
 
+# TODO: Scrape directly from store sites
 # Define store to search
 print('Forage can help you find the best prices on groceries near there.')
-# TODO: Scrape directly from store sites
 
 # Search for a product
-# TODO: Add a list of 'common' products?
 # TODO: Handle options other than yes/no
 # TODO: Accept a list or tuple as input
-# TODO: Get more price data
-# TODO: Add feature to add item to database
 search_test = False
 num_searches = 0
 num_items_added = 0
@@ -222,7 +218,7 @@ else:
     (pd.concat([pd.read_csv('user_log.csv'), pd.DataFrame(user_log)])
      .to_csv('user_log.csv', index = False))
 
-# Output new database with new items added
+# Output new items added
 if num_items_added > 0:
     if 'grocery_data_additional_items.csv' in os.listdir():
         (pd.concat([df, 
