@@ -24,7 +24,7 @@ prices = {}
 # Albertsons
 driver.get('https://albertsons.com/')
 time.sleep(3)
-for p in products[:1000]: 
+for p in products[:2000]: 
     # Search
     element = driver.find_element_by_id('skip-main-content')
     element.click()

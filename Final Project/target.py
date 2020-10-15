@@ -24,7 +24,7 @@ time.sleep(3)
 # driver.find_element_by_class_name('CurrentModality ').click()
 
 # Loop through products
-for p in products[:1000]: 
+for p in products[:2000]: 
     # Search
     element = driver.find_element_by_id('search')
     element.click()
@@ -36,7 +36,7 @@ for p in products[:1000]:
         time.sleep(3)
         product = driver.find_elements_by_xpath('.//a[@data-test="product-title"]')[0].text
         price = driver.find_elements_by_xpath('.//span[@class="h-text-bs"]')[0].text
-        prices[product] = price.replace('$', '')
+        prices[product] = float(price.replace('$', ''))
     except:
         print("We couldn't find", p)
     
