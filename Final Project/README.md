@@ -1,8 +1,8 @@
 # Forage
 Final Project for 95-888 Data Focused Python
-Evan Kramer (evankram)
-Shoukang Mao (shoukanm)
-Omar Othman (oothman)
+- Evan Kramer (evankram)
+- Shoukang Mao (shoukanm)
+- Omar Othman (oothman)
 
 ## Overview 
 This project scrapes data from a number of grocery store websites and tabulates them for users to search and compare.

@@ -18,8 +18,8 @@ import difflib
 import os
 import datetime
 import matplotlib.pyplot as plt
-# import albertsons
-# import target
+import albertsons
+import target
 
 # TODO: Visualizations (perhaps grocery store locations near zip code entered?
 # Or counts by category?)
