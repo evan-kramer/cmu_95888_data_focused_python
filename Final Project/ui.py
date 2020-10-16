@@ -14,21 +14,19 @@ import numpy as np
 import pandas as pd
 import requests
 import re
-import difflib
+from fuzzywuzzy import process
 import os
 import datetime
 import matplotlib.pyplot as plt
 # import albertsons
 # import target
 
-# TODO: Visualizations (perhaps grocery store locations near zip code entered? Or counts by category?)
-# TODO: Use NumPy
-# TODO: Add summary statistics
-
 # Load grocery data and set global objects
 # Note: Will not include user-added items for now
-grocery_data = pd.concat([pd.read_csv('albertsons.csv', index_col = 0), 
-                          pd.read_csv('target.csv', index_col = 0)])
+grocery_data = (pd.concat([pd.read_csv('albertsons.csv', index_col = 0), 
+                           pd.read_csv('target.csv', index_col = 0)])
+                .reset_index()
+                .drop(columns = 'index'))
 search_test, dwnld = False, False
 num_searches = 0
 num_items_added = 0
@@ -109,7 +107,7 @@ while zip_test == False:
             r = 'https://secure.shippingapis.com/ShippingAPI.dll?API=CityStateLookup&XML=' + xml
             city = re.search('<City>(.*?)</City>', requests.post(r).text).group(1).title()
             state = re.search('<State>(.*?)</State>', requests.post(r).text).group(1)
-            text = "\nIt looks like you're in " + city + ", " + state + "."
+            text = "\nIt looks like you're in " + city + ", " + state + ". Forage can help you find the best price around there."
             # confirm_zip = input(text)    
             print(text)
             zip_test = True
@@ -117,20 +115,19 @@ while zip_test == False:
         except:
             print("Sorry, we couldn't find that zip code.")
 
-# TODO: Scrape directly from store sites
-# Define store to search
-print('Forage can help you find the best prices on groceries near there.')
-
 # Search for a product
-# TODO: Handle options other than yes/no
-# TODO: Accept a list or tuple as input
 while search_test == False:
     # Initial search
-    print("\nEnter the name of a product you're looking for.")
-    search = input("You can also type \"All\" to get a list of all products, \"Common\" to get a list of top sellers, or \"Summary\" to summarize the data.\n")
+    print("\nEnter the product you're looking for or choose from the menu below.")
+    search = input("All: Get all products\nCommon: Return top searches\nRandom: See a random selection\nSummary: Get an overview\n")
     searches[num_searches] = search 
-    best_match = difflib.get_close_matches(search, grocery_data['product'], cutoff = 0.3)
-    literal_match = grocery_data[grocery_data['product'].str.lower().str.contains(search.lower().strip())]
+    best_match = process.extract(search.lower(), grocery_data['product'].str.lower())
+    best_match = pd.merge(grocery_data.assign(product_lower = grocery_data['product'].str.lower()), 
+                          pd.DataFrame([best_match[i][0] for i in range(len(best_match))], 
+                                       index = range(len(best_match)),
+                                       columns = ['product_lower']), 
+                          how = 'right',
+                          on = 'product_lower').drop(columns = 'product_lower')
     
     # Return a list of all items
     if search.lower().strip() == 'all':
@@ -157,27 +154,52 @@ while search_test == False:
                                        grocery_data[grocery_data['product'].str.lower().str.contains('steak')],
                                        grocery_data[grocery_data['product'].str.lower().str.contains('orange juice')]]))
             print(common_items)
+        # Otherwise extract common searches from user log (top 3)
         else:
-            common_items = ((pd.merge(pd.DataFrame(best_match, index = range(len(best_match)), 
-                                                   columns = ['product']),
-                                      grocery_data, 
-                                      how = 'left', on = 'product')
-                             .append(literal_match)))
+            user_log = pd.read_csv('user_log.csv')
+            common_searches = (user_log[~user_log.searches.str.lower().isin(['common', 'all', 'summary'])]
+                               .groupby('searches')['searches'].count()
+                               .sort_values(ascending = False)[0:3])
+            common_items = pd.DataFrame()
+            for i in common_searches.index:
+                common_match = process.extract(i, grocery_data['product'])
+            
+                common_items = common_items.append(
+                    pd.merge(grocery_data.assign(product_lower = grocery_data['product'].str.lower()), 
+                             pd.DataFrame([common_match[j][0].lower() for j in range(len(common_match))], 
+                                          index = range(len(common_match)),
+                                          columns = ['product_lower']), 
+                             how = 'right',
+                             on = 'product_lower').drop(columns = 'product_lower')
+                    )
             print(common_items)
         # Option to download
         download_data(common_items, 'common_items.csv')
         # Search again? 
         search_test = search_again()
         
+    # Return a random list
+    elif search.lower().strip() == 'random':
+        num_searches += 1
+        print("\nHere are 5 random products from our database:")
+        print(grocery_data.loc[np.random.randint(low = 0, high = len(grocery_data), size = 5)])
+        # Search again? 
+        search_test = search_again()
+        
     # TODO: Return visualizations and summary statistics
     elif search.lower().strip() == 'summary':
+        num_searches += 1
+        print('Our database has {num_products:,} products with an average price of ${avg_price:.2f}.'.format(num_products = len(grocery_data), avg_price = np.mean(grocery_data.price)))
+        print('Here are some more summary statistics:')
         print(grocery_data.describe())
-        plt.hist(grocery_data['price'])
+        plt.hist(grocery_data['price'], bins = 200)
         plt.show()
+        # Search again? 
+        search_test = search_again()
         
     # Return best match
     else:
-        # Find best match looking for literal matches and string distances
+        # Find best match 
         num_searches += 1
         # Does the item appear in any entry? 
         # If none, ask whether to search again or add to database
@@ -202,11 +224,7 @@ while search_test == False:
         # Return best match
         else: 
             print("\nHere's what we found:")
-            print((pd.merge(pd.DataFrame(best_match, index = range(len(best_match)), 
-                                         columns = ['product']),
-                            grocery_data, 
-                            how = 'left', on = 'product')
-                   .append(literal_match)))
+            print(best_match)
             # Is that what you were looking for? 
             success_test = False
             while success_test == False:

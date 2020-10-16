@@ -14,7 +14,7 @@ You will need to install the following modules in order to run the application:
 - [Pandas](https://pandas.pydata.org/)
 - [requests](https://requests.readthedocs.io/en/master/)
 - [re](https://docs.python.org/3/library/re.html)
-- [difflib](https://docs.python.org/3/library/difflib.html)
+- [fuzzywuzzy](https://anaconda.org/conda-forge/fuzzywuzzy)
 - [os](https://docs.python.org/3/library/os.html)
 - [datetime](https://docs.python.org/3/library/datetime.html)
 - [selenium](https://selenium-python.readthedocs.io/)
@@ -41,4 +41,4 @@ It is worth noting that their site does not appear to be updated regularly, but 
 
 ## Link to Video
 - [Part 1](https://www.loom.com/share/de980a0f545e487ca935d5248c20609c) demonstrates web scraping functionality.
-- [Part 2]() demonstrates the user interface 
+- [Part 2]() demonstrates the user interface.
