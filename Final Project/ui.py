@@ -30,6 +30,7 @@ grocery_data = (pd.concat([pd.read_csv('albertsons.csv', index_col = 0),
 search_test, dwnld = False, False
 num_searches = 0
 num_items_added = 0
+cart = pd.DataFrame()
 searches = {}
 keys = open('keys.txt').readlines()
 usps_key = re.search('USPS: (.*?)$', keys[0]).group(1)
@@ -80,6 +81,21 @@ def search_again():
         else:
             print("\nSorry, I didn't get that. Please enter yes or no.")
     return search_test
+# Add to cart
+def add_rows_to_cart(dataframe):    
+    add_to_cart_test = False
+    cart = pd.DataFrame()
+    while add_to_cart_test == False:
+        add_to_cart = input('Type the row number (index) of any items you want to add to your cart (separated by commas).\n')
+        try: 
+            add_rows = [int(i) for i in add_to_cart if re.search('[0-9]', i)]
+            add_to_cart_test = True
+            cart = cart.append(dataframe.loc[add_rows])
+            print(cart)
+            print("Added!")
+        except:
+            print("Something went wrong. Try entering valid row numbers separated by a comma.")
+    return cart
 
 # Overview message and enter zip code
 print("Welcome to Forage! Let's get started.")
@@ -182,11 +198,13 @@ while search_test == False:
     elif search.lower().strip() == 'random':
         num_searches += 1
         print("\nHere are 5 random products from our database:")
-        print(grocery_data.loc[np.random.randint(low = 0, high = len(grocery_data), size = 5)])
+        random = grocery_data.loc[np.random.randint(low = 0, high = len(grocery_data), size = 5)]
+        print(random)
         # Search again? 
         search_test = search_again()
         
-    # TODO: Return visualizations and summary statistics
+        
+    # Return visualizations and summary statistics
     elif search.lower().strip() == 'summary':
         num_searches += 1
         print('Our database has {num_products:,} products with an average price of ${avg_price:.2f}.'.format(num_products = len(grocery_data), avg_price = np.mean(grocery_data.price)))
@@ -231,6 +249,8 @@ while search_test == False:
                 success = input('Is that what you were looking for?\n')
                 if success.lower().strip() in ['y', 'yes', '1', 'True', True]:
                     print('Great!')
+                    # Add to cart
+                    cart = cart.append(add_rows_to_cart(best_match))
                     success_test = True
                 # Ask to add to database
                 elif success.lower().strip() in ['n', 'no', '0', 'False', False]:
@@ -251,6 +271,19 @@ while search_test == False:
                     print("\nSorry, I didn't get that. Please enter yes or no.")
             # Search again?
             search_test = search_again()
+
+# Show cart
+try:
+    if len(cart) > 0:
+        print("Here's what's in your cart:")
+        print(cart)
+        print("Your total is: ${total_cost:,.2f}".format(total_cost = np.sum(cart.price)))
+        # Option to download
+        download_data(cart, 'cart.csv')
+    else:
+        pass
+except:
+    pass
 
 # Exit program
 print('\nThanks for using Forage!')
