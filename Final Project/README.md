@@ -40,4 +40,5 @@ It is worth noting that their site does not appear to be updated regularly, but 
 - Follow the inline prompts and search to your heart's content
 
 ## Link to Video
-[This video](https://www.loom.com/share/217bb40397194b4db0c12b90e106e7a6) demonstrates the high-level functionality of the application. 
+- [Part 1](https://www.loom.com/share/de980a0f545e487ca935d5248c20609c) demonstrates web scraping functionality.
+- [Part 2]() demonstrates the user interface 

@@ -18,26 +18,23 @@ import difflib
 import os
 import datetime
 import matplotlib.pyplot as plt
-import albertsons
-import target
+# import albertsons
+# import target
 
-# TODO: Visualizations (perhaps grocery store locations near zip code entered?
-# Or counts by category?)
+# TODO: Visualizations (perhaps grocery store locations near zip code entered? Or counts by category?)
 # TODO: Use NumPy
 # TODO: Add summary statistics
-# TODO: Display only top five matches then ask if they want to see more
-# TODO: Limit number of results returned?
-# TODO: Define categories
 
-
-# Load data and set global objects
-# TODO: Should this include user-added items?
+# Load grocery data and set global objects
+# Note: Will not include user-added items for now
 grocery_data = pd.concat([pd.read_csv('albertsons.csv', index_col = 0), 
                           pd.read_csv('target.csv', index_col = 0)])
 search_test, dwnld = False, False
 num_searches = 0
 num_items_added = 0
 searches = {}
+keys = open('keys.txt').readlines()
+usps_key = re.search('USPS: (.*?)$', keys[0]).group(1)
 
 # Define functions
 # Add to database
@@ -102,13 +99,13 @@ while zip_test == False:
         # Try getting a response from the USPS API
         try:
             xml = '''
-            <CityStateLookupRequest USERID="588CMU000141">
+            <CityStateLookupRequest USERID="{api_key}">
             <ZipCode ID='0'>
-            <Zip5>99999</Zip5>
+            <Zip5>{zip}</Zip5>
             </ZipCode>
             </CityStateLookupRequest>
             '''
-            xml = xml.replace('99999', zip[:5]) # replace with first five of zip
+            xml = xml.format(api_key = usps_key, zip = str(zip[:5])) # replace with first five of zip
             r = 'https://secure.shippingapis.com/ShippingAPI.dll?API=CityStateLookup&XML=' + xml
             city = re.search('<City>(.*?)</City>', requests.post(r).text).group(1).title()
             state = re.search('<State>(.*?)</State>', requests.post(r).text).group(1)

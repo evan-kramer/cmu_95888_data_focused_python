@@ -24,7 +24,7 @@ time.sleep(3)
 # driver.find_element_by_class_name('CurrentModality ').click()
 
 # Loop through products
-for p in products[:3000]: 
+for p in products[:2000]: 
     # Search
     element = driver.find_element_by_id('search')
     element.click()
