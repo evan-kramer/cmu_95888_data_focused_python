@@ -39,6 +39,8 @@ It is worth noting that their site does not appear to be updated regularly, but 
 - Hit F5 or select "Run Module" from the "Run" menu 
 - Follow the inline prompts and search to your heart's content
 
-## Link to Videos
+## Link to Demo Videos
 - [Part 1](https://www.loom.com/share/de980a0f545e487ca935d5248c20609c) demonstrates web scraping functionality.
 - [Part 2](https://www.loom.com/share/e5d589f9364141f0abf2791ccd0eca7e) and [part 3](https://www.loom.com/share/bd8dbd91467540c4a8bc7dc928518cac) demonstrate the user interface.
+
+These videos are also available in the zip folder for convenience.
